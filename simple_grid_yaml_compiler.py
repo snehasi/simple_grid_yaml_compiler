@@ -25,4 +25,8 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    print(phase_2(phase_1(args.filename)))
+    output = phase_2(phase_1(args.filename))
+    try:
+        args.o.write(output)
+    except:
+        print(output)
