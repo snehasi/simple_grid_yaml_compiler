@@ -1,0 +1,1 @@
+from compiler.semantics import check_yaml_syntax
