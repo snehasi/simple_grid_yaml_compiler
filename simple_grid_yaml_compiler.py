@@ -6,7 +6,6 @@ def phase_1(site_level_configuration_file):
     ## fetch repo and get default_values.yaml
     repo_urls = lexemes.get_repo_list(site_level_configuration_file)
 
-    ##
     return yaml_augmentation.add_include_statements_for_default_files(repo_urls, site_level_configuration_file)
 
 ## add data from all includes
@@ -18,6 +17,12 @@ def phase_3(final_yaml_file):
     semantics.check_yaml_syntax(final_yaml_file)
 
 if __name__ == "__main__":
-    parser.add_argument('--i')
+
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('filename', type=argparse.FileType('r'))
+    parser.add_argument('-o', nargs=1, type=argparse.FileType('w'))
+
     args = parser.parse_args()
-    phase_3(phase_2(phase_1('input_file')))
+
+    print(phase_2(phase_1(args.filename)))
