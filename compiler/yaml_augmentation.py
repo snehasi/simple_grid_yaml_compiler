@@ -1,27 +1,12 @@
-import yaml, urllib2
+def add_include_statements_for_default_files(file_names_repository_default, site_level_configuration_file):
+        output = open('./.temp/site_level_configuration_file_unprocessed_includes', 'w')
+        for file_name_repository_default in file_names_repository_default:
+            try:
+                output.write("include: '" + file_name_repository_default + "'\n")
+            except Exception as ex:
+                print ex.message
 
-def add_include_statements_for_default_files(list_default, config_file):
-    try:
-        config_file.seek(0)
-        input_config_file = yaml.load(config_file)
-        input_config_file['include'] = list_default
-        
-        return input_config_file
-
-    except yaml.YAMLError as exc:
-        print(exc)
-        return None
-
-def add_included_files(augmented_yaml_file):
-
-    for each_url in augmented_yaml_file['include']:
-
-        new_url = each_url.replace("https://github.com/", "https://raw.githubusercontent.com/")
-
-        data = urllib2.urlopen(new_url + "/master/default-data.yaml")
-        if not(data.read() == "" or data.read() == None):
-            augmented_yaml_file.update(yaml.load(data.read()))
-
-    augmented_yaml_file.pop('include')
-    return augmented_yaml_file
-        
+        site_level_configuration_file.seek(0)
+        output.writelines(l for l in site_level_configuration_file.readlines())
+        output.close()
+        return output
