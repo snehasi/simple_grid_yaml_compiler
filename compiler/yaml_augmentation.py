@@ -1,3 +1,5 @@
+import re
+
 def add_include_statements_for_default_files(file_names_repository_default, site_level_configuration_file):
         output = open('./.temp/site_level_configuration_file_unprocessed_includes', 'w')
         for file_name_repository_default in file_names_repository_default:
