@@ -10,3 +10,29 @@ def add_include_statements_for_default_files(file_names_repository_default, site
         output.writelines(l for l in site_level_configuration_file.readlines())
         output.close()
         return output
+
+
+def expand_file_from_include_statements(augmented_yaml_file, yaml_file_to_be_expanded):
+    f = open(yaml_file_to_be_expanded, 'r')
+    for l in f.readlines():
+        search_results = re.search('(include:.*)', l)
+        if search_results is not None:
+            include_string = search_results.group()
+            file_path = include_string.split(':')[1].strip()
+            if file_path.startswith("'") or file_path.startswith("\""):
+                file_path = file_path[1: -1]
+            expand_file_from_include_statements(augmented_yaml_file, file_path)
+        else:
+            augmented_yaml_file.write(l)
+    f.close()
+
+
+def add_included_files(default_includes_yaml_file):
+    augmented_yaml_file = open('./.temp/augmented_yaml_file.yaml', 'w')
+    expand_file_from_include_statements(augmented_yaml_file, default_includes_yaml_file.name)
+    augmented_yaml_file.close()
+    augmented_yaml_file = open(augmented_yaml_file.name, 'r')
+    for l in augmented_yaml_file.readlines():
+        print(l)
+    augmented_yaml_file.close()
+    return augmented_yaml_file
