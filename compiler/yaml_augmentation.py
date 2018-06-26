@@ -31,8 +31,4 @@ def add_included_files(default_includes_yaml_file):
     augmented_yaml_file = open('./.temp/augmented_yaml_file.yaml', 'w')
     expand_file_from_include_statements(augmented_yaml_file, default_includes_yaml_file.name)
     augmented_yaml_file.close()
-    augmented_yaml_file = open(augmented_yaml_file.name, 'r')
-    for l in augmented_yaml_file.readlines():
-        print(l)
-    augmented_yaml_file.close()
     return augmented_yaml_file
