@@ -7,17 +7,15 @@ default_vo_generic_server_secondary: &default_vo_generic_server_secondary 'lcg-v
 
 ## defaults for supported_virtual_organizations
 default_vo_alice: &default_vo_alice
-    first:
-      name: alice
-      server: *default_vo_generic_server_primary
-      port: '15000'
-      dn: *default_vo_generic_dn_server_primary
-      ca_dn: *default_vo_generic_dn_ca_cern
-    second:
-      server: *default_vo_generic_server_secondary
-      port: '15001'
-      dn: *default_vo_generic_dn_server_secondary
-      ca_dn: *default_vo_generic_dn_ca_cern
+  - name: alice
+  - server: *default_vo_generic_server_primary
+    port: '15000'
+    dn: *default_vo_generic_dn_server_primary
+    ca_dn: *default_vo_generic_dn_ca_cern
+  - server: *default_vo_generic_server_secondary
+    port: '15001'
+    dn: *default_vo_generic_dn_server_secondary
+    ca_dn: *default_vo_generic_dn_ca_cern
 
 default_vo_ops: &default_vo_ops
   - name: ops

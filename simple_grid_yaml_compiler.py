@@ -1,6 +1,6 @@
 from compiler import lexemes, semantics, yaml_augmentation, repo_processor, runtime_variables
 import argparse
-
+import yaml
 
 
 ## fetch repos, add include statement for the downloaded default_values.yaml
@@ -26,7 +26,7 @@ def phase_2(default_includes_yaml_file):
 
 ## syntax_checking
 def phase_3(final_yaml_file, output):
-    semantics.check_yaml_syntax(final_yaml_file)
+    return semantics.check_yaml_syntax(final_yaml_file)
 
 def parse_args():
 
@@ -51,3 +51,6 @@ if __name__ == "__main__":
     print(include_made.name)
     yolo = phase_one_and_a_half(include_made)
     augmented_yaml_file = phase_3(yolo, output)
+    augmented_yaml_file = open(augmented_yaml_file.name, 'r')
+    data =yaml.load(augmented_yaml_file)
+    print data

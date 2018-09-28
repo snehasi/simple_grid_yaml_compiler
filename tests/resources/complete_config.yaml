@@ -5,7 +5,7 @@ vars:
 
 cream_ce_runtime_vars:
   - &ce_host lw-site-droplet-0
-  - &vos alice,ops,dteam
+  - &vos alice
 
 site:
   name: 'simple-dev-site'
