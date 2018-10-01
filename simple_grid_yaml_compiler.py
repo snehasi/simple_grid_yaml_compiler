@@ -15,7 +15,7 @@ def phase_1(site_level_configuration_file, main_default_values_file):
     default_includes_yaml_file = yaml_augmentation.add_include_statements_for_default_files(file_names_repository_default, site_level_configuration_file)
     return default_includes_yaml_file
 
-def phase_one_and_a_half(include_made):
+def phase_two_and_a_half(include_made):
     return runtime_variables.add_runtime_variables(include_made)
 
 ## add data from all includes
@@ -25,8 +25,11 @@ def phase_2(default_includes_yaml_file):
 
 
 ## syntax_checking
-def phase_3(final_yaml_file, output):
+def phase_3(final_yaml_file):
     return semantics.check_yaml_syntax(final_yaml_file)
+
+def phase_4(phase_3_output):
+    pass
 
 def parse_args():
 
@@ -49,8 +52,12 @@ if __name__ == "__main__":
     include_made = phase_2(default_includes_yaml_file)
     print("Phase 2 output")
     print(include_made.name)
-    yolo = phase_one_and_a_half(include_made)
-    augmented_yaml_file = phase_3(yolo, output)
+    runtime = phase_two_and_a_half(include_made)
+    augmented_yaml_file = phase_3(runtime, output)
+    # augmented_yaml_file = phase_3(open('./.temp/runtime.yaml', 'r'), output)
     augmented_yaml_file = open(augmented_yaml_file.name, 'r')
     data =yaml.load(augmented_yaml_file)
-    print data
+    print data['lightweight_components'][0]['config']['cream-info']['ce_cpu_model']
+    print data['supported_virtual_organizations']
+    print data['site']['latitude']
+    phase_4(augmented_yaml_file)

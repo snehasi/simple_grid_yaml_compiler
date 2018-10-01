@@ -48,7 +48,7 @@ lightweight_components:
     preferred_tech_stack:
       level_2_configuration: yaim
     config:
-      - cream-info:
+      cream-info:
           #wn_list: str()
           #users_conf: str()
           #groups_conf: str()
@@ -68,7 +68,7 @@ lightweight_components:
           #globus_tcp_port_range: str()
           #ce_batch_sys: str()
           #ce_capability: str()
-          ce_cpu_model: Xeon
+          ce_cpu_model: *ce_cpu_model
           ce_cpu_speed: 3000
           ce_cpu_vendor: Intel
           #ce_inboundip: str()
@@ -128,7 +128,7 @@ lightweight_components:
           # vo_ops_vomses: str()
           # vo_ops_voms_ca_dn: str()
           # vo_ops_voms_servers: str()
-      - supplemental_config:
+      supplemental_config:
           some_additional_parameter: some_value
 
   - type: worker_node
