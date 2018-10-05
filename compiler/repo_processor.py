@@ -7,10 +7,16 @@ def generate_default_file_name(repo_info):
     return './.temp/' + repo_info['repo_name'] + '_defaults.yaml'
 
 
+def generate_config_schema_file_name(repo_info):
+    return './.temp/' + repo_info['repo_name'] + '_schema.yaml'
+
+
+def generate_meta_info_file_name(repo_info):
+    return './.temp/' + repo_info['repo_name'] + '_info.yaml'
+
+
 def analyse_repo_url(repo_url):
-    print(repo_url)
     repo_analysis = re.search('//.*/(.*)/(.*)', repo_url)
-    print(repo_analysis)
     org_name = repo_analysis.group(1)
     repo_name = repo_analysis.group(2)
     ##TODO fetch branch info
@@ -20,6 +26,24 @@ def analyse_repo_url(repo_url):
         'repo_name': repo_name,
         'branch_name': branch
     }
+
+
+def get_meta_info(repo_url):
+    try:
+        base_url = urlparse("https://raw.githubusercontent.com/")
+        repo_info = analyse_repo_url(repo_url)
+        repo_info_list = [repo_info['org_name'], repo_info['repo_name'], repo_info['branch_name'], 'meta-info.yaml']
+        relative_url = urlparse("/".join(x.strip() for x in repo_info_list))
+        meta_info_url = urljoin(base_url.geturl(), relative_url.geturl())
+        response = urllib2.urlopen(meta_info_url)
+        meta_info = response.read()
+        fname = generate_meta_info_file_name(repo_info)
+        with open(fname, 'w') as f:
+            f.write(meta_info)
+            f.close()
+            return f
+    except Exception as ex:
+        print ex.message
 
 
 def get_default_values(repo_url):
@@ -40,6 +64,25 @@ def get_default_values(repo_url):
         return fname
    except Exception as ex:
        print(ex.message)
+
+
+def get_config_schema(repo_url):
+    try:
+        base_url= urlparse("https://raw.githubusercontent.com/")
+        repo_info = analyse_repo_url(repo_url)
+        repo_info_list = [repo_info['org_name'], repo_info['repo_name'], repo_info['branch_name'], 'config-schema.yaml']
+        relative_url = urlparse("/".join(x.strip() for x in repo_info_list))
+        config_schema_url = urljoin(base_url.geturl(), relative_url.geturl())
+        response = urllib2.urlopen(config_schema_url)
+        config_schema = response.read()
+        fname = generate_config_schema_file_name(repo_info)
+        with open(fname, 'w') as f:
+            f.write(config_schema)
+            f.close()
+            return f
+    except Exception as ex:
+        print(ex.message)
+
 
 def get_runtime_variables(fname):
     f = open(fname, 'r')
