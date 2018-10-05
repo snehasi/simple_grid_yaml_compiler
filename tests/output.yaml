@@ -1,158 +1,317 @@
-cream_runtime_vars: [lw-site-droplet-0, alice]
-default_group_alice: null
-default_group_alice_name: alice
-default_group_alicesgm_name: atlas
-default_group_dteam: &id005 {accepted_voms_extensions: null, gid: 2688, name: dteam}
-default_group_dteam_name: dteam
-default_group_dteamsgm: &id006 {accepted_voms_extensions: null, gid: 2680, name: dteamsgm,
-  priority_group: sgm}
-default_group_dteamsgm_name: dteamsgm
-default_group_ops: &id007 {accepted_voms_extensions: null, gid: 45000, name: ops}
+default_group_opssgm: &default_group_opssgm
+  gid: 46001
+  name: opssgm
+
+  priority_group: sgm
+  accepted_voms_extensions: /alice/ROLE=
+
+vars:
+- 18.184.37.92
+- 167.99.253.118
+
+pool_accounts:
+- base_name: alice
+  initial_uid: '10417'
+  users_num: '5'
+  primary_group: alice
+- base_name: sgmali
+  initial_uid: '60101'
+  users_num: '10'
+  primary_group: atlas
+  secondary_group: alice
+- &default_pool_account_dteam_with_sgm
+  - &default_pool_account_dteam
+    base_name: dteam
+    initial_uid: '18118'
+    users_num: '10'
+    primary_group: dteam
+
+  - &default_pool_account_dteamsgm
+    base_name: sgmdtm
+    initial_uid: '60501'
+    users_num: '5'
+    primary_group: dteamsgm
+    secondary_group: dteam
+
+- &default_pool_account_ops_with_sgm
+  - &default_pool_account_ops
+    base_name: ops
+    initial_uid: '45001'
+    users_num: '10'
+    primary_group: ops
+
+  - &default_pool_account_opssgm
+    base_name: sgmops
+    initial_uid: '60701'
+    users_num: '10'
+    primary_group: ops
+    secondary_group: opssgm
+
+
+
+
+pbs_runtime_vars:
+- lw-site-droplet-0
+- alice
+
 default_group_ops_name: ops
-default_group_opssgm: {accepted_voms_extensions: /alice/ROLE=, gid: 46001, name: opssgm,
-  priority_group: sgm}
-default_group_opssgm_name: opssgm
-default_pool_account_dteam: &id001 {base_name: dteam, initial_uid: '18118', primary_group: dteam,
-  users_num: '10'}
-default_pool_account_dteam_with_sgm: &id008
-- *id001
-- &id002 {base_name: sgmdtm, initial_uid: '60501', primary_group: dteamsgm, secondary_group: dteam,
-  users_num: '5'}
-default_pool_account_dteamsgm: *id002
-default_pool_account_ops: &id003 {base_name: ops, initial_uid: '45001', primary_group: ops,
-  users_num: '10'}
-default_pool_account_ops_with_sgm: &id009
-- *id003
-- &id004 {base_name: sgmops, initial_uid: '60701', primary_group: ops, secondary_group: opssgm,
-  users_num: '10'}
-default_pool_account_opssgm: *id004
-default_vo_alice: &id010
-- {name: alice}
-- {ca_dn: /DC=ch/DC=cern/CN=CERN Grid Certification Authority, dn: /DC=ch/DC=cern/OU=computers/CN=voms2.cern.ch,
-  port: '15000', server: voms2.cern.ch}
-- {ca_dn: /DC=ch/DC=cern/CN=CERN Grid Certification Authority, dn: /DC=ch/DC=cern/OU=computers/CN=lcg-voms2.cern.ch,
-  port: '15001', server: lcg-voms2.cern.ch}
-default_vo_dteam: &id011
-- {ca_dn: /DC=ch/DC=cern/CN=CERN Grid Certification Authority, dn: /DC=ch/DC=cern/OU=computers/CN=voms2.cern.ch,
-  port: '15001', server: voms2.cern.ch}
-- {ca_dn: /DC=ch/DC=cern/CN=CERN Grid Certification Authority, dn: /DC=ch/DC=cern/OU=computers/CN=lcg-voms2.cern.ch,
-  port: '15001', server: lcg-voms2.cern.ch}
-default_vo_generic_dn_ca_cern: /DC=ch/DC=cern/CN=CERN Grid Certification Authority
-default_vo_generic_dn_server_primary: /DC=ch/DC=cern/OU=computers/CN=voms2.cern.ch
+site:
+  name: simple-dev-site
+  email: mayank.sharma@cern.ch
+  latitude: 46.3
+  longitude: 6.2
+  location: CERN, Geneva, Switzerland
+  description: A demo site demonstrating the SIMPLE framework for site setup
+  website: https://home.cern
+  support_website: https://groups.google.com/forum/#!forum/wlcg-lightweight-sites
+  support_email: mayank.sharma@cern.ch
+  security_email: mayank.sharma@cern.ch
+  grid: wlcg   #site_other_grid: str(), wlcg, egi,osg
+  tier: 3
+  bdii_host: bdii.cern.ch
+  use_argus: false
+
+lightweight_components:
+- repository_url: https://github.com/WLCG-Lightweight-Sites/wlcg_lightweight_site_ce_cream
+  nodes:
+  - node: lw-site-droplet-0
+    container_count: 1
+  - node: ec2-18-184-37-92.eu-central-1
+    container_count: 2
+  config:
+    ce_si00: 381
+    cream_db_password: str()
+    cemon_host:
+    - lw-site-droplet-0
+    ce_runtimeenv: EMI-3
+    ce_close_se: SE3
+    ce_cpu_vendor: Intel
+    ce_minvirtmem: 8192
+    ce_close_se3_access_point: /not/used
+    batch_log_dir: /var/spool/pbs
+    apel_db_password: str()
+    ce_inboundip: false
+    blparser_with_updater_notifier: true
+    ce_logcpu: 0
+    ce_os_arch: str()
+    vo_sw_dir: /opt/exp_soft
+    apel_mysql_host:
+    - lw-site-droplet-0
+    #apel_db_password
+    ce_otherdescr: Cores=4
+    cream_db_user: str()
+    ce_sf00: 0
+    ce_minphysmem: 2000
+    ce_smpsize: 8
+    ce_physcpu: 0
+    ce_outboundip: true
+    se_list:
+    - not-used.some-domain                                                                           #check
+    blparser_host:
+    - lw-site-droplet-0
+    globus_tcp_port_range: {begin: 20000, end: 21000}
+    ce_capability: CPUScalingReferenceSI00=1000
+    mysql_password: fteu5746hg
+    ce_cpu_model: Xeon
+    ce_cpu_speed: 3000
+    queues:
+    - alice
+
+
+    ce_close_se3_host: not-used.some-domain
+    se_mount_info_list: none
+  name: Cream-CE
+  preferred_tech_stack:
+    level_2_configuration: yaim
+- repository_url: https://github.com/WLCG-Lightweight-Sites/wlcg_lightweight_site_wn_pbs
+  nodes:
+  - node: lw-site-droplet-0,
+    container_count: 3
+  - node: ec2-18-184-37-92.eu-central-1,
+    container_count: 3
+  config:
+    px_host: myproxy.cern.ch
+    batch_server:
+    - lw-site-droplet-0
+    ce_smpsize: 8
+    ce_close_se3_access_point: /not/used
+    ce_host:
+    - lw-site-droplet-0
+    ce_close_se: SE3
+    se_list: str() - *pbs_default_var_ce_close_se3_host
+    ce_close_se3_host: not-used.some-domain
+    se_mount_info_list: none
+    vo_sw_dir: /opt/exp_soft
+    queues:
+    - alice
+  name: WN-Pbs
+  preferred_tech_stack:
+    level_2_configuration: yaim
+default_group_dteamsgm: &default_group_dteamsgm
+  gid: 2680
+  name: dteamsgm
+  priority_group: sgm
+  accepted_voms_extensions:
+preferred_tech_stack:
+  level_1_configuration: puppet
+  level_2_configuration: puppet
+  container_orchestration: docker-swarm
+  container: docker
+
 default_vo_generic_dn_server_secondary: /DC=ch/DC=cern/OU=computers/CN=lcg-voms2.cern.ch
+default_group_ops: &default_group_ops
+  gid: 45000
+  name: ops
+  accepted_voms_extensions:
+default_group_alicesgm_name: atlas
+default_pool_account_ops_with_sgm: *default_pool_account_ops_with_sgm
+default_pool_account_dteamsgm: *default_pool_account_dteamsgm
+site_infrastructure:
+- hostname: ec2-18-184-37-92.eu-central-1
+  domain: compute.amazonaws.com
+  ip_address: 18.184.37.92
+- hostname: lw-site-droplet-0
+  domain: digitalocean.com
+  ip_address: 167.99.253.118
+
+
+default_group_alice_name: alice
+default_vo_generic_dn_ca_cern: /DC=ch/DC=cern/CN=CERN Grid Certification Authority
+supported_virtual_organizations:
+- &default_vo_alice
+  - name: alice
+  - server: voms2.cern.ch
+    port: '15000'
+    dn: /DC=ch/DC=cern/OU=computers/CN=voms2.cern.ch
+    ca_dn: /DC=ch/DC=cern/CN=CERN Grid Certification Authority
+  - server: lcg-voms2.cern.ch
+    port: '15001'
+    dn: /DC=ch/DC=cern/OU=computers/CN=lcg-voms2.cern.ch
+    ca_dn: /DC=ch/DC=cern/CN=CERN Grid Certification Authority
+- &default_vo_dteam
+  - server: voms2.cern.ch
+    port: '15001'
+    dn: /DC=ch/DC=cern/OU=computers/CN=voms2.cern.ch
+    ca_dn: /DC=ch/DC=cern/CN=CERN Grid Certification Authority
+  - server: lcg-voms2.cern.ch
+    port: '15001'
+    dn: /DC=ch/DC=cern/OU=computers/CN=lcg-voms2.cern.ch
+    ca_dn: /DC=ch/DC=cern/CN=CERN Grid Certification Authority
+- &default_vo_ops
+  - name: ops
+  - server: voms2.cern.ch
+    port: '15009'
+    dn: /DC=ch/DC=cern/OU=computers/CN=voms2.cern.ch
+    ca_dn: /DC=ch/DC=cern/CN=CERN Grid Certification Authority
+  - server: lcg-voms2.cern.ch
+    port: '15009'
+    dn: /DC=ch/DC=cern/OU=computers/CN=lcg-voms2.cern.ch
+    ca_dn: /DC=ch/DC=cern/CN=CERN Grid Certification Authority
+
+default_vo_alice: *default_vo_alice
 default_vo_generic_server_primary: voms2.cern.ch
-default_vo_generic_server_secondary: lcg-voms2.cern.ch
-default_vo_ops: &id012
-- {name: ops}
-- {ca_dn: /DC=ch/DC=cern/CN=CERN Grid Certification Authority, dn: /DC=ch/DC=cern/OU=computers/CN=voms2.cern.ch,
-  port: '15009', server: voms2.cern.ch}
-- {ca_dn: /DC=ch/DC=cern/CN=CERN Grid Certification Authority, dn: /DC=ch/DC=cern/OU=computers/CN=lcg-voms2.cern.ch,
-  port: '15009', server: lcg-voms2.cern.ch}
-expected-from-site-level-config:
-  pbs_default_var_batch_server: [lw-site-droplet-0]
+default_vo_ops: *default_vo_ops
+default_group_dteam: &default_group_dteam
+  gid: 2688
+  name: dteam
+  accepted_voms_extensions:
+default_pool_account_dteam: *default_pool_account_dteam
+groups:
+- gid: 1395
+  name: alice
+  accepted_voms_extensions:
+    vo: alice     # add_vo_name_in_default_config
+    group: ''
+    role: ''
+    category: ''
+- gid: 1397
+  name: atlas
+  priority_group: sgm
+  accepted_voms_extensions: /alice/ROLE=lcgadmin
+- *default_group_dteam
+- *default_group_dteamsgm
+- *default_group_ops
+- <<: *default_group_opssgm
+  gid: 2018
+
+cream_runtime_vars:
+- lw-site-droplet-0
+- alice
+default_pool_account_dteam_with_sgm: *default_pool_account_dteam_with_sgm
+default_vo_dteam: *default_vo_dteam
+default_pool_account_ops: *default_pool_account_ops
+wn-pbs-expected-from-site-level-config:
+    #pbs_default_var_wn_list: &pbs_default_var_wn_list /root/wn-list.conf #SET
+    #pbs_default_var_users_conf: &pbs_default_var_users_conf /root/users.conf #SET
+    #pbs_default_var_groups_conf: &pbs_default_var_groups_conf /root/groups.conf #SET
+  pbs_default_var_px_host: myproxy.cern.ch
+  pbs_default_var_ce_host:
+  - lw-site-droplet-0
+  pbs_default_var_ce_smpsize: 8
+  pbs_default_var_batch_server:
+  - lw-site-droplet-0
   pbs_default_var_ce_close_se: SE3
   pbs_default_var_ce_close_se3_access_point: /not/used
   pbs_default_var_ce_close_se3_host: not-used.some-domain
-  pbs_default_var_ce_host: [lw-site-droplet-0]
-  pbs_default_var_ce_smpsize: 8
-  pbs_default_var_groups_conf: /root/groups.conf
-  pbs_default_var_px_host: myproxy.cern.ch
-  pbs_default_var_queues: [alice]
   pbs_default_var_se_list: str() - *pbs_default_var_ce_close_se3_host
   pbs_default_var_se_mount_info_list: none
-  pbs_default_var_users_conf: /root/users.conf
   pbs_default_var_vo_sw_dir: /opt/exp_soft
-  pbs_default_var_wn_list: /root/wn-list.conf
-groups:
-- accepted_voms_extensions: {category: '', group: '', role: '', vo: alice}
-  gid: 1395
-  name: alice
-- {accepted_voms_extensions: /alice/ROLE=lcgadmin, gid: 1397, name: atlas, priority_group: sgm}
-- *id005
-- *id006
-- *id007
-- {accepted_voms_extensions: /alice/ROLE=, gid: 2018, name: opssgm, priority_group: sgm}
-lightweight_components:
-- config:
-    apel_db_password: str()
-    apel_mysql_host: [lw-site-droplet-0]
-    batch_log_dir: /var/spool/pbs
-    blparser_host: [lw-site-droplet-0]
-    blparser_with_updater_notifier: true
-    ce_capability: CPUScalingReferenceSI00=1000
-    ce_close_se: SE3
-    ce_close_se3_access_point: /not/used
-    ce_close_se3_host: not-used.some-domain
-    ce_cpu_model: Xeon
-    ce_cpu_speed: 3000
-    ce_cpu_vendor: Intel
-    ce_inboundip: false
-    ce_logcpu: 0
-    ce_minphysmem: 2000
-    ce_minvirtmem: 8192
-    ce_os_arch: str()
-    ce_otherdescr: Cores=4
-    ce_outboundip: true
-    ce_physcpu: 0
-    ce_runtimeenv: EMI-3
-    ce_sf00: 0
-    ce_si00: 381
-    ce_smpsize: 8
-    cemon_host: [lw-site-droplet-0]
-    cream_db_password: str()
-    cream_db_user: str()
-    globus_tcp_port_range: {begin: 20000, end: 21000}
-    mysql_password: fteu5746hg
-    queues: [alice]
-    se_list: [not-used.some-domain]
-    se_mount_info_list: none
-    vo_sw_dir: /opt/exp_soft
-  name: Cream-CE
-  nodes:
-  - {container_count: 1, node: lw-site-droplet-0}
-  - {container_count: 2, node: ec2-18-184-37-92.eu-central-1}
-  preferred_tech_stack: {level_2_configuration: yaim}
-  repository_url: https://github.com/WLCG-Lightweight-Sites/wlcg_lightweight_site_ce_cream
-- config:
-    batch_server: [lw-site-droplet-0]
-    ce_close_se: SE3
-    ce_close_se3_access_point: /not/used
-    ce_close_se3_host: not-used.some-domain
-    ce_host: [lw-site-droplet-0]
-    ce_smpsize: 8
-    groups_conf: /root/groups.conf
-    px_host: myproxy.cern.ch
-    queues: [alice]
-    se_list: str() - *pbs_default_var_ce_close_se3_host
-    se_mount_info_list: none
-    users_conf: /root/users.conf
-    vo_sw_dir: /opt/exp_soft
-    wn_list: /root/wn-list.conf
-  name: WN-Pbs
-  nodes:
-  - {container_count: 3, node: 'lw-site-droplet-0,'}
-  - {container_count: 3, node: 'ec2-18-184-37-92.eu-central-1,'}
-  preferred_tech_stack: {level_2_configuration: yaim}
-  repository_url: https://github.com/WLCG-Lightweight-Sites/wlcg_lightweight_site_wn_pbs
-pbs_runtime_vars: [lw-site-droplet-0, alice]
-pool_accounts:
-- {base_name: alice, initial_uid: '10417', primary_group: alice, users_num: '5'}
-- {base_name: sgmali, initial_uid: '60101', primary_group: atlas, secondary_group: alice,
-  users_num: '10'}
-- *id008
-- *id009
-preferred_tech_stack: {container: docker, container_orchestration: docker-swarm, level_1_configuration: puppet,
-  level_2_configuration: puppet}
-site: {bdii_host: bdii.cern.ch, description: A demo site demonstrating the SIMPLE
-    framework for site setup, email: mayank.sharma@cern.ch, grid: wlcg, latitude: 46.3,
-  location: 'CERN, Geneva, Switzerland', longitude: 6.2, name: simple-dev-site, security_email: mayank.sharma@cern.ch,
-  support_email: mayank.sharma@cern.ch, support_website: 'https://groups.google.com/forum/#!forum/wlcg-lightweight-sites',
-  tier: 3, use_argus: false, website: 'https://home.cern'}
-site_infrastructure:
-- {domain: compute.amazonaws.com, hostname: ec2-18-184-37-92.eu-central-1, ip_address: 18.184.37.92}
-- {domain: digitalocean.com, hostname: lw-site-droplet-0, ip_address: 167.99.253.118}
-supported_virtual_organizations:
-- *id010
-- *id011
-- *id012
-vars: [18.184.37.92, 167.99.253.118]
+  pbs_default_var_queues:
+  - alice
+
+## Variable declaration:
+default_group_alice:
+default_group_dteamsgm_name: dteamsgm
+default_group_opssgm_name: opssgm
+default_vo_generic_dn_server_primary: /DC=ch/DC=cern/OU=computers/CN=voms2.cern.ch
+cream-ce-expected-from-site-level-config:
+  cream_default_var_globus_tcp_port_range: {begin: 20000, end: 21000}
+  cream_default_var_ce_capability: CPUScalingReferenceSI00=1000
+  cream_default_var_ce_cpu_model: Xeon
+  cream_default_var_ce_cpu_speed: 2800
+  cream_default_var_ce_cpu_vendor: intel
+  cream_default_var_ce_inboundip: false
+  cream_default_var_ce_logcpu: 0
+  cream_default_var_ce_minphysmem: 2000
+  cream_default_var_ce_minvirtmem: 8192
+    #cream_default_var_ce_os: &cream_default_var_ce_os ScientificCERNSLC #SET
+  cream_default_var_ce_os_arch: x86_64
+    #cream_default_var_ce_os_release: &cream_default_var_ce_os_release "6.8" #SET
+    #cream_default_var_ce_os_version: &cream_default_var_ce_os_version Carbon #SET
+  cream_default_var_ce_otherdescr: Cores=4
+  cream_default_var_ce_outboundip: true
+  cream_default_var_ce_physcpu: 0
+  cream_default_var_ce_runtimeenv: EMI-3                                    #SET
+  cream_default_var_ce_sf00: 0
+  cream_default_var_ce_si00: 381
+  cream_default_var_ce_smpsize: 8
+    #batch_server str() #value needs to be hostname of container
+    #cream_default_var_job_manager: &cream_default_var_job_manager pbs #SET
+    #cream_default_var_ce_batch_sys: &cream_default_var_ce_batch_sys torque #SET
+  cream_default_var_batch_log_dir: /var/spool/pbs                                      #SET
+    #cream_default_var_batch_version: &cream_default_var_batch_version 2.5.13-1cri.9nik #SET
+  cream_default_var_blparser_with_updater_notifier: true
+  cream_default_var_blparser_host:
+  - lw-site-droplet-0
+  cream_default_var_cemon_host:
+  - lw-site-droplet-0
+  cream_default_var_cream_db_user: cream
+    #cream_db_password str()
+  cream_default_var_apel_mysql_host:
+  - lw-site-droplet-0
+    #apel_db_password
+  cream_default_var_ce_close_se: SE3
+  cream_default_var_ce_close_se3_access_point: /not/used                                                  #check
+  cream_default_var_ce_close_se3_host: not-used.some-domain                                          #check
+  cream_default_var_se_list:
+  - not-used.some-domain                                                                             #check
+  cream_default_var_se_mount_info_list: none
+  cream_default_var_vo_sw_dir: /opt/exp_soft                                  #SET
+  cream_default_var_queues:
+  - alice
+
+
+
+default_vo_generic_server_secondary: lcg-voms2.cern.ch
+default_pool_account_opssgm: *default_pool_account_opssgm
+default_group_dteam_name: dteam
