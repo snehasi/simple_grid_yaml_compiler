@@ -60,7 +60,7 @@ lightweight_components:
           #site_security_email: str()
           #site_support_email: str()
           #site_other_grid: str()
-          # ce_host: str() #hostname of container. TODO decide if required to be explicitly entered by the site admin
+          ce_host: str() #hostname of container. TODO decide if required to be explicitly entered by the site admin
           #globus_tcp_port_range: str()
           #ce_batch_sys: str()
           #ce_capability: str()

@@ -3,9 +3,13 @@ vars:
   - &amazon_ip_address 18.184.37.92
   - &digitalocean_ip_address 167.99.253.118
 
-cream_ce_runtime_vars:
-  - &ce_host lw-site-droplet-0
-  - &vos alice
+cream_runtime_vars:
+  - &cream_runtime_var_ce_host lw-site-droplet-0
+  - &cream_runtime_var_queues alice
+
+pbs_runtime_vars:
+  - &pbs_runtime_var_ce_host lw-site-droplet-0
+  - &pbs_runtime_var_queues alice
 
 site:
   name: 'simple-dev-site'
@@ -38,7 +42,7 @@ site_infrastructure:
     ip_address: *digitalocean_ip_address
 
 lightweight_components:
-  - type: compute_element
+  - name: Cream-CE
     repository_url: "https://github.com/WLCG-Lightweight-Sites/wlcg_lightweight_site_ce_cream"
     nodes:
       - node: lw-site-droplet-0
@@ -64,11 +68,11 @@ lightweight_components:
           #site_security_email: str()
           #site_support_email: str()
           #site_other_grid: str()
-          # ce_host: str() #hostname of container. TODO decide if required to be explicitly entered by the site admin
+          #ce_host: str() #hostname of container. TODO decide if required to be explicitly entered by the site admin
           #globus_tcp_port_range: str()
           #ce_batch_sys: str()
           #ce_capability: str()
-          ce_cpu_model: *ce_cpu_model
+          ce_cpu_model: *cream_default_var_ce_cpu_model
           ce_cpu_speed: 3000
           ce_cpu_vendor: Intel
           #ce_inboundip: str()
@@ -131,7 +135,7 @@ lightweight_components:
       supplemental_config:
           some_additional_parameter: some_value
 
-  - type: worker_node
+  - name: WN-Pbs
     repository_url: "https://github.com/WLCG-Lightweight-Sites/wlcg_lightweight_site_wn_pbs"
     nodes:
       - node: lw-site-droplet-0,
@@ -141,7 +145,7 @@ lightweight_components:
     preferred_tech_stack:
       level_2_configuration: yaim
     config:
-      - wn_info_pbs:
+      - wn_pbs:
           #wn_list: /root/wn_conf
           #users_conf: str()
           #groups_conf: str()
