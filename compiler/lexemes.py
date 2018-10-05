@@ -1,4 +1,4 @@
-import yaml, re
+import re
 
 def get_repo_list(site_level_configuration_file):
     urls = []
