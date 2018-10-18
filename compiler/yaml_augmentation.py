@@ -1,5 +1,6 @@
 import re
 from compiler import runtime_variables
+from ruamel.yaml.comments import CommentedSeq, CommentedMap
 
 
 def add_include_statements_for_default_files(file_names_repository_default, site_level_configuration_file):
@@ -37,3 +38,25 @@ def add_included_files(default_includes_yaml_file):
     expand_file_from_include_statements(expanded_yaml_file, default_includes_yaml_file.name)
     expanded_yaml_file.close()
     return expanded_yaml_file
+
+
+def split_component_config(input_data):
+    components = input_data['lightweight_components']
+    updated_components = CommentedSeq()
+    for component in components:
+        temp_component = CommentedMap()
+        for component_section in component:
+            if component_section == "deploy":
+                pass
+            else:
+                temp_component[component_section] = component[component_section]
+
+        number_of_nodes = len(component['deploy'])
+
+        for i in range(0, number_of_nodes):
+            temp_component['deploy'] = component['deploy'][i]
+            updated_components.append(temp_component)
+
+    components = updated_components
+    input_data['lightweight_components'] = components
+    return input_data
