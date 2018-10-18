@@ -89,7 +89,10 @@ def phase_6(phase_5_output_file, yaml):
     variable_hierarchies = lexemes.parse_for_variable_hierarchies(input_data,  "__from__")
     #pass 2
     split_config = yaml_augmentation.split_component_config(variable_hierarchies)
-    yaml.dump(split_config, phase_6_output_file)
+    #pass 3
+    with_ids =  yaml_augmentation.add_component_ids(split_config)
+    print with_ids
+    yaml.dump(with_ids, phase_6_output_file)
     return phase_6_output_file
 
 
