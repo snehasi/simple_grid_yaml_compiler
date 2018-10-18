@@ -37,10 +37,11 @@ def phase_4(final_yaml_file):
     return semantics.check_yaml_syntax(final_yaml_file)
 
 
-def phase_5(phase_4_output, runtime_vars):
+def phase_5(phase_4_output, runtime_vars, yaml):
     phase_4_output_file = open(phase_4_output.name, 'r')
+    phase_5_output_file = open("./.temp/phase_5_output.yaml", 'w')
     data = yaml.load(phase_4_output_file)
-    output = {}
+    phase_5_output = {}
     for data_section in data:
         if data_section == 'lightweight_components':
             updated_components = []
@@ -72,11 +73,22 @@ def phase_5(phase_4_output, runtime_vars):
                     else:
                         updated_component[component_section] = lightweight_component[component_section]
                 updated_components.append(updated_component)
-            output[data_section] = updated_components
+            phase_5_output[data_section] = updated_components
         else:
-            output[data_section] = data[data_section]
-    print output
-    return output
+            phase_5_output[data_section] = data[data_section]
+    yaml.dump(phase_5_output, phase_5_output_file)
+    phase_5_output_file.close()
+    return phase_5_output_file
+
+
+def phase_6(phase_5_output_file, yaml):
+    phase_6_output_file = open("./.temp/phase_6_output.yaml", 'w')
+    phase_6_output = lexemes.resolve_variable_hierarchy(phase_5_output_file)
+    yaml.dump(phase_6_output, phase_6_output_file)
+    return phase_6_output_file
+
+
+
 def parse_args():
 
     parser = argparse.ArgumentParser()
@@ -92,7 +104,7 @@ if __name__ == "__main__":
 
     args = parse_args()
     site_level_configuration_file = open(args['site_level_configuration_file'], 'r')
-    main_default_values_file = "./tests/resources/default_values.yaml"
+    main_default_values_file = "./tests/data/simple_grid_site_defaults/site_level_configuration_defaults.yaml"
     output = open(args['output'], 'w')
     yaml = YAML()
     phase_1_output, repo_urls = phase_1(site_level_configuration_file, main_default_values_file)
@@ -105,6 +117,7 @@ if __name__ == "__main__":
     # print data['lightweight_components'][0]['config']['cream-info']['ce_cpu_model']
     # print data['supported_virtual_organizations']
     # print data['site']['latitude']
-    phase_5_output = phase_5(phase_4_output, runtime_vars)
-    yaml.dump(phase_5_output, output)
+    phase_5_output_file = phase_5(phase_4_output, runtime_vars, yaml)
+    phase_6_output = phase_6(phase_5_output_file, yaml)
+
     output.close()
