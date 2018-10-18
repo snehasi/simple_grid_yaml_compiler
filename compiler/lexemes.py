@@ -1,7 +1,6 @@
 import re
 from ruamel.yaml import YAML
 from ruamel.yaml.comments import CommentedSeq, CommentedMap
-import yaml
 
 def get_repo_list(site_level_configuration_file):
     urls = []
@@ -12,14 +11,6 @@ def get_repo_list(site_level_configuration_file):
             url = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', url_line_string)
             urls.append(url[0])
     return urls
-
-
-def resolve_variable_hierarchy(input_file):
-    yaml = YAML()
-    f = open(input_file.name, 'r')
-    data = yaml.load(f)
-    return parse_for_variable_hierarchies(data,  "__from__")
-
 
 ##########################################################################
 # Warning: Badass recursive way to replace all __from__ keywords correctly

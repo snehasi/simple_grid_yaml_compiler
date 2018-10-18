@@ -54,7 +54,7 @@ site_infrastructure:
 lightweight_components:
   - name: Cream-CE
     repository_url: "https://github.com/WLCG-Lightweight-Sites/wlcg_lightweight_site_ce_cream"
-    nodes:
+    deploy:
       - node: lw-site-droplet-0
         container_count: 1
       - node: ec2-18-184-37-92.eu-central-1
@@ -147,7 +147,7 @@ lightweight_components:
 
   - name: WN-Pbs
     repository_url: "https://github.com/WLCG-Lightweight-Sites/wlcg_lightweight_site_wn_pbs"
-    nodes:
+    deploy:
       - node: lw-site-droplet-0,
         container_count: 3
       - node: ec2-18-184-37-92.eu-central-1,

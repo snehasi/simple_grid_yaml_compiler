@@ -82,9 +82,14 @@ def phase_5(phase_4_output, runtime_vars, yaml):
 
 
 def phase_6(phase_5_output_file, yaml):
+    phase_5_output = open(phase_5_output_file.name, 'r')
+    input_data = yaml.load(phase_5_output)
     phase_6_output_file = open("./.temp/phase_6_output.yaml", 'w')
-    phase_6_output = lexemes.resolve_variable_hierarchy(phase_5_output_file)
-    yaml.dump(phase_6_output, phase_6_output_file)
+    #pass 1
+    variable_hierarchies = lexemes.parse_for_variable_hierarchies(input_data,  "__from__")
+    #pass 2
+    split_config = yaml_augmentation.split_component_config(variable_hierarchies)
+    yaml.dump(split_config, phase_6_output_file)
     return phase_6_output_file
 
 
