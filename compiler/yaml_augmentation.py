@@ -1,4 +1,4 @@
-import re
+import re, copy
 from compiler import runtime_variables
 from ruamel.yaml.comments import CommentedSeq, CommentedMap
 
@@ -43,20 +43,27 @@ def add_included_files(default_includes_yaml_file):
 def split_component_config(input_data):
     components = input_data['lightweight_components']
     updated_components = CommentedSeq()
+    ## deep copy
     for component in components:
-        temp_component = CommentedMap()
-        for component_section in component:
-            if component_section == "deploy":
-                pass
-            else:
-                temp_component[component_section] = component[component_section]
-
         number_of_nodes = len(component['deploy'])
 
-        for i in range(0, number_of_nodes):
-            temp_component['deploy'] = component['deploy'][i]
+        for idx, val in enumerate(component['deploy']):
+            temp_component = copy.deepcopy(component)
+            temp_component['deploy'] = copy.deepcopy(component['deploy'][idx])
             updated_components.append(temp_component)
 
     components = updated_components
     input_data['lightweight_components'] = components
     return input_data
+
+
+def add_component_ids(input_data):
+    components = input_data['lightweight_components']
+    number_of_components = len(components)
+    for i in range(number_of_components):
+        print i
+        print input_data['lightweight_components'][i]
+        input_data['lightweight_components'][i].setdefault('id', i)
+    return input_data
+
+
