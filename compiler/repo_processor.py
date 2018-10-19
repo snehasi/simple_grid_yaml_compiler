@@ -46,11 +46,11 @@ def get_meta_info(repo_url):
         print ex.message
 
 
-def get_default_values(repo_url):
+def get_default_values(repo_url, default_file_name):
    try:
         default_data_base_url = urlparse("https://raw.githubusercontent.com/")
         repo_info = analyse_repo_url(repo_url)
-        repo_info_list = [repo_info['org_name'], repo_info['repo_name'], repo_info['branch_name'], 'default-data.yaml']
+        repo_info_list = [repo_info['org_name'], repo_info['repo_name'], repo_info['branch_name'], default_file_name]
         default_data_relative_url = urlparse("/".join(x.strip() for x in repo_info_list))
         default_data_url = urljoin(default_data_base_url.geturl(), default_data_relative_url.geturl())
         response = urllib2.urlopen(default_data_url)

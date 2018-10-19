@@ -7,13 +7,14 @@ from ruamel.yaml import YAML
 # INPUT: raw site-level-config file filled by site admin
 # PROCESS: extract repo_urls, download and save default files for repositories
 # OUTPUT: include statements for default files of repositories + raw site level-config file
-def phase_1(site_level_configuration_file, main_default_values_file):
+def phase_1(site_level_configuration_file):
     # fetch repo and get default_values.yaml
+    main_default_values_file = repo_processor.get_default_values("https://github.com/WLCG-Lightweight-Sites/simple_grid_site_defaults", "site_level_configuration_defaults.yaml" )
     repo_urls = lexemes.get_repo_list(site_level_configuration_file)
     print(repo_urls)
     file_names_repository_default = [main_default_values_file]
     for url in repo_urls:
-        file_names_repository_default.append(repo_processor.get_default_values(url))
+        file_names_repository_default.append(repo_processor.get_default_values(url, 'default-data.yaml'))
 
     default_includes_yaml_file = yaml_augmentation.add_include_statements_for_default_files(file_names_repository_default, site_level_configuration_file)
     return default_includes_yaml_file, repo_urls
@@ -112,10 +113,9 @@ if __name__ == "__main__":
 
     args = parse_args()
     site_level_configuration_file = open(args['site_level_configuration_file'], 'r')
-    main_default_values_file = "./tests/data/simple_grid_site_defaults/site_level_configuration_defaults.yaml"
     output = open(args['output'], 'w')
     yaml = YAML()
-    phase_1_output, repo_urls = phase_1(site_level_configuration_file, main_default_values_file)
+    phase_1_output, repo_urls = phase_1(site_level_configuration_file)
     phase_2_output = phase_2(phase_1_output)
     runtime_vars, phase_3_output = phase_3(phase_2_output)
     phase_4_output = phase_4(phase_3_output)
