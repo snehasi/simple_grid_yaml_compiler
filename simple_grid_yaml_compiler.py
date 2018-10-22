@@ -1,7 +1,7 @@
 from compiler import lexemes, semantics, yaml_augmentation, repo_processor, runtime_variables, processor_config_schemas
 import argparse
 from ruamel.yaml import YAML
-
+from shutil import copyfile
 
 # fetch repos, add include statement for the downloaded default_values.yaml
 # INPUT: raw site-level-config file filled by site admin
@@ -127,5 +127,5 @@ if __name__ == "__main__":
     # print data['site']['latitude']
     phase_5_output_file = phase_5(phase_4_output, runtime_vars, yaml)
     phase_6_output = phase_6(phase_5_output_file, yaml)
-
+    copyfile(phase_6_output.name, output.name)
     output.close()
