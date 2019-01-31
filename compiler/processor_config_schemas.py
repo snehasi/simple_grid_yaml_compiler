@@ -1,4 +1,5 @@
 from ruamel.yaml import YAML
+from compiler.repo_processor import generate_meta_info_parent_name
 
 def find_component_data(data, meta_info):
     components = []
@@ -78,14 +79,12 @@ def get_final_config_values_for_component(component, expected_params, defaults_f
         return final_component_data
 
 
-def process_config_schema(component, config_schema_file, default_data_runtime_file, meta_info_file ):
+def process_config_schema(component, config_schema_file, default_data_runtime_file, meta_info ):
     yaml = YAML()
     config_schema_file = open(config_schema_file.name, 'r')
     config_schema = yaml.load(config_schema_file)
     default_data_file = open(default_data_runtime_file.name, 'r')
     default_data = yaml.load(default_data_file)
-    meta_info_file = open(meta_info_file.name, 'r')
-    meta_info = yaml.load(meta_info_file)
     expected_key = str(meta_info['component']).lower() + '-expected-from-site-level-config'
     expected_params = config_schema['expected-from-site-level-config']
     defaults_for_expected_params = default_data[expected_key]

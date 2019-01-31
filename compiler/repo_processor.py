@@ -27,6 +27,24 @@ def analyse_repo_url(repo_url):
         'branch_name': branch
     }
 
+def generate_meta_info_parent_name(meta_info_file):
+    with open(meta_info_file, 'r') as meta_info:
+        for line in meta_info:
+            if "component" in line:
+                parent_name = line.split(':')[1].strip().lower()
+                return 'meta_info_' + ''.join(parent_name.split('"'))
+
+def augment_meta_info(meta_info_file):
+    augmented_meta_info = ""
+    component_line = ""
+    meta_info_parent_name = generate_meta_info_parent_name(meta_info_file)
+    with open(meta_info_file, 'r') as meta_info:
+        for line in meta_info:
+            augmented_meta_info += "    " + line
+    augmented_meta_info = meta_info_parent_name + ":\n" + augmented_meta_info
+    with open(meta_info_file, 'w') as meta_info:
+        meta_info.write(augmented_meta_info)
+        return meta_info
 
 def get_meta_info(repo_url):
     try:
@@ -41,7 +59,7 @@ def get_meta_info(repo_url):
         with open(fname, 'w') as f:
             f.write(meta_info)
             f.close()
-            return f
+        return augment_meta_info(fname)
     except Exception as ex:
         print ex.message
 
@@ -59,8 +77,6 @@ def get_default_values(repo_url, default_file_name):
         with open(fname, 'w') as f:
             f.write(default_data)
             f.close()
-        # process runtime variables
-        runtime_variables = get_runtime_variables(fname)
         return fname
    except Exception as ex:
        print(ex.message)
@@ -82,13 +98,3 @@ def get_config_schema(repo_url):
             return f
     except Exception as ex:
         print(ex.message)
-
-
-def get_runtime_variables(fname):
-    f = open(fname, 'r')
-    for l in f.readlines():
-        re.search("runtime-variable-mapping:", l)
-        """
-        runtime-variable-mapping:
-            - &ce_host lightweight-component[name='cream'][type='compute-element'][]
-        """

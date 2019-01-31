@@ -1,3 +1,27 @@
+meta_info_wn-pbs:
+  component: WN-Pbs
+  version: 2.5.13
+  docker_hub_url: ''
+  primary_config_key: pbs-info
+  site_level_config_version: 1.0
+  default_var_prefix: pbs_default_var
+  runtime_vars:
+  - pbs_runtime_var_ce_host
+  - pbs_runtime_var_queues
+  host_requirements:
+    firewall:
+    - ports: 8080
+      protocol: tcp
+      action: accept
+      ipv6: true
+    - ports: 6543
+      protocol: tcp
+      action: accept
+      ipv6: false
+    cvmfs: true
+    docker_run_parameters:
+      privileged: true
+      mount: ce-cream
 default_group_opssgm:
   gid: 46001
   name: opssgm
@@ -34,9 +58,6 @@ pool_accounts:
     users_num: '10'
     primary_group: ops
     secondary_group: opssgm
-pbs_runtime_vars:
-- lightweight_component02.cern.ch
-- alice
 default_group_ops_name: ops
 site:
   name: simple-dev-site
@@ -53,6 +74,9 @@ site:
   tier: 3
   bdii_host: bdii.cern.ch
   use_argus: false
+cream_runtime_variables:
+- lightweight_component01.cern.ch
+- alice
 lightweight_components:
 - lifecycle_hooks:
     pre_config:
@@ -146,22 +170,6 @@ lightweight_components:
   preferred_tech_stack:
     level_2_configuration: yaim
   id: 1
-default_group_dteamsgm:
-  gid: 2680
-  name: dteamsgm
-  priority_group: sgm
-  accepted_voms_extensions:
-preferred_tech_stack:
-  level_1_configuration: puppet
-  level_2_configuration: puppet
-  container_orchestration: docker-swarm
-  container: docker
-default_vo_generic_dn_server_secondary: /DC=ch/DC=cern/OU=computers/CN=lcg-voms2.cern.ch
-default_group_ops:
-  gid: 45000
-  name: ops
-  accepted_voms_extensions:
-default_group_alicesgm_name: alicesgm
 default_pool_account_ops_with_sgm:
 - base_name: ops
   initial_uid: '45001'
@@ -172,6 +180,33 @@ default_pool_account_ops_with_sgm:
   users_num: '10'
   primary_group: ops
   secondary_group: opssgm
+default_group_dteamsgm:
+  gid: 2680
+  name: dteamsgm
+  priority_group: sgm
+  accepted_voms_extensions:
+preferred_tech_stack:
+  level_1_configuration: puppet
+  level_2_configuration: puppet
+  container_orchestration: docker-swarm
+  container: docker
+default_vo_dteam:
+- server: voms2.cern.ch
+  port: '15001'
+  dn: /DC=ch/DC=cern/OU=computers/CN=voms2.cern.ch
+  ca_dn: /DC=ch/DC=cern/CN=CERN Grid Certification Authority
+- server: lcg-voms2.cern.ch
+  port: '15001'
+  dn: /DC=ch/DC=cern/OU=computers/CN=lcg-voms2.cern.ch
+  ca_dn: /DC=ch/DC=cern/CN=CERN Grid Certification Authority
+default_group_ops:
+  gid: 45000
+  name: ops
+  accepted_voms_extensions:
+default_group_alicesgm_name: alicesgm
+pbs_runtime_variables:
+- lightweight_component02.cern.ch
+- alice
 default_pool_account_dteamsgm:
   base_name: sgmdtm
   initial_uid: '60501'
@@ -268,9 +303,31 @@ groups:
   name: opssgm
   priority_group: sgm
   accepted_voms_extensions: /alice/ROLE=
-cream_runtime_vars:
-- lightweight_component01.cern.ch
-- alice
+meta_info_cream-ce:
+  component: Cream-CE
+  version: 1.2
+  docker_hub_url: ''
+  primary_config_key: cream-info
+  site_level_config_version: 1.0
+  default_var_prefix: cream_default_var
+  runtime_vars:
+  - cream_runtime_var_ce_host
+  - cream_runtime_var_queues
+  host_requirements:
+    firewall:
+    - ports: 22
+      protocol: tcp
+      action: accept
+      ipv6: true
+    - ports: 6543
+      protocol: tcp
+      action: accept
+      ipv6: false
+    cvmfs: true
+  docker_run_parameters:
+    privileged: true
+    mount: ce-cream
+    hostname: lightweight_component01.cern.ch
 default_pool_account_dteam_with_sgm:
 - base_name: dteam
   initial_uid: '18118'
@@ -281,15 +338,7 @@ default_pool_account_dteam_with_sgm:
   users_num: '5'
   primary_group: dteamsgm
   secondary_group: dteam
-default_vo_dteam:
-- server: voms2.cern.ch
-  port: '15001'
-  dn: /DC=ch/DC=cern/OU=computers/CN=voms2.cern.ch
-  ca_dn: /DC=ch/DC=cern/CN=CERN Grid Certification Authority
-- server: lcg-voms2.cern.ch
-  port: '15001'
-  dn: /DC=ch/DC=cern/OU=computers/CN=lcg-voms2.cern.ch
-  ca_dn: /DC=ch/DC=cern/CN=CERN Grid Certification Authority
+default_vo_generic_dn_server_secondary: /DC=ch/DC=cern/OU=computers/CN=lcg-voms2.cern.ch
 default_pool_account_ops:
   base_name: ops
   initial_uid: '45001'
@@ -311,7 +360,7 @@ wn-pbs-expected-from-site-level-config:
   pbs_default_var_queues:
   - alice
 default_group_alice:
-default_group_dteamsgm_name: dteamsgm
+default_vo_generic_server_secondary: lcg-voms2.cern.ch
 default_group_opssgm_name: opssgm
 default_vo_generic_dn_server_primary: /DC=ch/DC=cern/OU=computers/CN=voms2.cern.ch
 cream-ce-expected-from-site-level-config:
@@ -352,7 +401,7 @@ cream-ce-expected-from-site-level-config:
   cream_default_var_vo_sw_dir: /opt/exp_soft
   cream_default_var_queues:
   - alice
-default_vo_generic_server_secondary: lcg-voms2.cern.ch
+default_group_dteamsgm_name: dteamsgm
 default_pool_account_opssgm:
   base_name: sgmops
   initial_uid: '60701'
