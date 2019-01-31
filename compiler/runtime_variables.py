@@ -17,7 +17,7 @@ def extract_runtime_variables(includes_made):
             else:
                 copy_flag = False
         else:
-            if "runtime_vars" not in line:
+            if "runtime_variables" not in line:
                 config_file += line
             else:
                 runtime_vars += line
