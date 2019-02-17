@@ -10,10 +10,10 @@ def find_component_data(data, meta_info):
     return components
 
 
-def lookup(data, key, parameter):
+def lookup(data, parameter):
     value = None
     try:
-        value = data[key][parameter]
+        value = data[parameter]
     except Exception as ex:
         pass
     return value
@@ -38,7 +38,7 @@ def get_final_config_values_for_component(component, expected_params, defaults_f
             print "  - Param " + str(i) + " :" +config_param
             if expected_params[config_param]['required']:
                 print "     - required: True"
-                value_defined_by_user = lookup(component, meta_info['primary_config_key'], config_param)
+                value_defined_by_user = lookup(component, config_param)
                 if value_defined_by_user != None:
                     print "     - specified: True"
                     value = value_defined_by_user
@@ -55,7 +55,7 @@ def get_final_config_values_for_component(component, expected_params, defaults_f
                         print "     - use-default: False"
             else:
                 print "     - required: False"
-                value_defined_by_user = lookup(component, meta_info['primary_config_key'], config_param)
+                value_defined_by_user = lookup(component, config_param)
                 if value_defined_by_user != None:
                     print "     - specified: True"
                     value = value_defined_by_user
@@ -75,7 +75,8 @@ def get_final_config_values_for_component(component, expected_params, defaults_f
                 message = "A value needs to be specified for " + str(config_param) + " in your site level config file for correctly configuring component "
                 raise Exception(message)
                 sys.exit(message)
-            final_component_data[str(config_param)] = value
+            if value is not "Ignore":
+                final_component_data[str(config_param)] = value
         return final_component_data
 
 
