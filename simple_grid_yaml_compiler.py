@@ -92,7 +92,9 @@ def phase_6(phase_5_output_file, yaml):
     #pass 2
     split_config = yaml_augmentation.split_component_config(variable_hierarchies)
     #pass 3
-    with_ids =  yaml_augmentation.add_component_ids(split_config)
+    container_split_config = yaml_augmentation.split_container_config(variable_hierarchies)
+    #pass 4
+    with_ids =  yaml_augmentation.add_component_ids(container_split_config)
     print with_ids
     yaml.dump(with_ids, phase_6_output_file)
     return phase_6_output_file

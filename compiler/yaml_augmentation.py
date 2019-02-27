@@ -45,8 +45,6 @@ def split_component_config(input_data):
     updated_components = CommentedSeq()
     ## deep copy
     for component in components:
-        number_of_nodes = len(component['deploy'])
-
         for idx, val in enumerate(component['deploy']):
             temp_component = copy.deepcopy(component)
             temp_component['deploy'] = copy.deepcopy(component['deploy'][idx])
@@ -54,8 +52,29 @@ def split_component_config(input_data):
 
     components = updated_components
     input_data['lightweight_components'] = components
+
     return input_data
 
+
+def split_container_config(input_data):
+    components = sort_components_based_on_execution_id(input_data)
+    updated_components = CommentedSeq()
+    for component in components:
+        container_count = component['deploy']['container_count']
+        for i in range(0, container_count):
+            temp_component = copy.deepcopy(component)
+            temp_component['container_count'] = 1
+            updated_components.append(temp_component)
+    input_data['lightweight_components'] = updated_components
+    return input_data
+
+
+def sort_components_based_on_execution_id(input_data):
+    components = input_data['lightweight_components']
+    return sorted(components, key=get_execution_id)
+
+def get_execution_id(component):
+    return component['execution_id']
 
 def add_component_ids(input_data):
     components = input_data['lightweight_components']
@@ -63,7 +82,7 @@ def add_component_ids(input_data):
     for i in range(number_of_components):
         print i
         print input_data['lightweight_components'][i]
-        input_data['lightweight_components'][i].setdefault('id', i)
+        input_data['lightweight_components'][i].setdefault('execution_id', i)
     return input_data
 
 
