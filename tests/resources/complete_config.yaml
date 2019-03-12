@@ -94,7 +94,7 @@ lightweight_components:
         - /etc/simple_grid/lifecycle/wn_post_inst1.sh
     deploy:
       - node: lightweight_component02.cern.ch
-        container_count: 1
+        container_count: 2
     preferred_tech_stack:
       level_2_configuration: yaim
     config:
