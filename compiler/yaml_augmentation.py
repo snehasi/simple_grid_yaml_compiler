@@ -65,7 +65,8 @@ def split_container_config(input_data):
         for i in range(0, container_count):
             temp_component = copy.deepcopy(component)
             temp_component['container_count'] = 1
-            temp_component['execution_id'] = int()
+            temp_component['id'] = component['execution_id'] + 0
+            del temp_component['execution_id']
             updated_components.append(temp_component)
     input_data['lightweight_components'] = updated_components
     return input_data
@@ -78,16 +79,15 @@ def sort_components_based_on_execution_id(input_data):
 def get_execution_id(component):
     return component['execution_id']
 
-def add_component_ids(input_data):
+def add_execution_ids(input_data):
     components = input_data['lightweight_components']
     number_of_components = len(components)
     for i in range(number_of_components):
+        input_data['lightweight_components'][i]['execution_id'] = i
         print "***"
-        print i
         print input_data['lightweight_components'][i]['name']
         print input_data['lightweight_components'][i]['execution_id']
         print "***"
-        input_data['lightweight_components'][i]['execution_id'] = i
     return input_data
 
 

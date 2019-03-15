@@ -3,6 +3,7 @@ import argparse
 from ruamel.yaml import YAML
 from shutil import copyfile
 
+
 # fetch repos, add include statement for the downloaded default_values.yaml
 # INPUT: raw site-level-config file filled by site admin
 # PROCESS: extract repo_urls, download and save default files and meta info files for repositories
@@ -94,7 +95,7 @@ def phase_6(phase_5_output_file, yaml):
     #pass 3
     container_split_config = yaml_augmentation.split_container_config(variable_hierarchies)
     #pass 4
-    with_ids =  yaml_augmentation.add_component_ids(container_split_config)
+    with_ids =  yaml_augmentation.add_execution_ids(container_split_config)
     print with_ids
     yaml.dump(with_ids, phase_6_output_file)
     return phase_6_output_file
