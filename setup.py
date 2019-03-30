@@ -12,7 +12,7 @@ from setuptools import setup, find_packages, Command
 
 # Package Info
 NAME = 'simple_grid_yaml_compiler'
-MODULE_SRC_DIR = 'simple_grid_yaml_compiler'
+MODULE_SRC_DIR = ''
 DESCRIPTION = 'The YAML compiler for the SIMPLE Grid Framework'
 URL = 'https://github.com/WLCG-Lightweight-Sites/simple_grid_yaml_compiler'
 EMAIL = 'mayank.sharma@cern.ch'
