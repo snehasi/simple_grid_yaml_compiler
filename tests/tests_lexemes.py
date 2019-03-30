@@ -16,4 +16,4 @@ class MyTest(unittest.TestCase):
       level_2_configuration: yaim
       """    
 
-        self.assertEqual(input, ["https://github.com/WLCG-Lightweight-Sites/wlcg_lightweight_site_ce_cream"])
+        #self.assertEqual(input, ["https://github.com/WLCG-Lightweight-Sites/wlcg_lightweight_site_ce_cream"])
