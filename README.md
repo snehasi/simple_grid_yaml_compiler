@@ -1,5 +1,5 @@
 # simple_grid_yaml_compiler
-[![Build Status](https://travis-ci.com/WLCG-Lightweight-Sites/simple_grid_yaml_compiler.svg?branch=master)](https://travis-ci.com/WLCG-Lightweight-Sites/simple_grid_yaml_compiler?branch=master)
+[![Build Status](https://travis-ci.org/WLCG-Lightweight-Sites/simple_grid_yaml_compiler.svg?branch=master)](https://travis-ci.org/WLCG-Lightweight-Sites/simple_grid_yaml_compiler?branch=master)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/WLCG-Lightweight-Sites/wlcg_lightweight_site_config_validation_engine/issues)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
