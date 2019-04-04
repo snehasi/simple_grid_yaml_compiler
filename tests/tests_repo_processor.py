@@ -1,4 +1,4 @@
-from compiler.repo_processor import analyse_repo_url, generate_default_file_name, generate_config_schema_file_name, generate_meta_info_file_name, get_default_values, get_config_schema
+from compiler.repo_processor import analyse_repo_url, generate_default_file_name, generate_config_schema_file_name, generate_meta_info_file_name, get_default_values, get_config_schema, get_meta_info, augment_meta_info
 
 from os import mkdir
 from shutil import rmtree
@@ -76,5 +76,29 @@ class RepoProcessorTest(unittest.TestCase):
 
 		file_url = "https://raw.githubusercontent.com/WLCG-Lightweight-Sites/wlcg_lightweight_site_ce_cream/master/config-schema.yaml"
 		expected_output = urlopen(file_url).read()
+
+		self.assertEqual(output, expected_output)
+
+	def test_get_meta_info(self):
+		repo_url = "https://github.com/WLCG-Lightweight-Sites/wlcg_lightweight_site_ce_cream"
+
+		repo_info = analyse_repo_url(repo_url)
+		fname     = generate_meta_info_file_name(repo_info)
+
+		with open(fname, "r") as file:
+			output = file.read()
+
+		file_name = "meta_info.expected"
+
+		file_url = "https://raw.githubusercontent.com/WLCG-Lightweight-Sites/wlcg_lightweight_site_ce_cream/master/meta-info.yaml"
+		meta_info_output = urlopen(file_url).read()
+
+		with open(file_name, "w") as file:
+			file.write(meta_info_output)
+
+		augment_meta_info(file_name)
+
+		with open(file_name, "r") as file:
+			expected_output = file.read()
 
 		self.assertEqual(output, expected_output)
