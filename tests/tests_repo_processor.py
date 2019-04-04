@@ -110,7 +110,7 @@ class RepoProcessorTest(unittest.TestCase):
 	def test_augment_meta_info(self):
 		base_fname     = "./tests/data/meta_info.yaml"
 		test_fname     = "./.temp/meta_info.yaml"
-		expected_fname = "./tests/data/augmented_meta_info.yaml" 
+		expected_fname = "./tests/data/augmented_meta_info.yaml"
 
 		with open(base_fname, "r") as base, open(test_fname, "w") as test:
 			test.write(base.read())
