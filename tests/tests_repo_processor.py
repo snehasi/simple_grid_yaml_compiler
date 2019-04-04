@@ -1,6 +1,6 @@
 from compiler.repo_processor import analyse_repo_url, generate_default_file_name, generate_config_schema_file_name, generate_meta_info_file_name, get_default_values, get_config_schema, get_meta_info, augment_meta_info
 
-from os import mkdir
+from os import mkdir, remove
 from shutil import rmtree
 from urllib2 import urlopen
 
@@ -102,3 +102,18 @@ class RepoProcessorTest(unittest.TestCase):
 			expected_output = file.read()
 
 		self.assertEqual(output, expected_output)
+
+	def test_augment_meta_info(self):
+		base_fname     = "./tests/data/meta_info.yaml"
+		test_fname     = "./.temp/meta_info.yaml"
+		expected_fname = "./tests/data/augmented_meta_info.yaml" 
+
+		with open(base_fname, "r") as base, open(test_fname, "w") as test:
+			test.write(base.read())
+
+		augment_meta_info(test_fname)
+
+		with open(test_fname, "r") as test, open(expected_fname, "r") as expected:
+			self.assertEqual(test.read(), expected.read())
+
+		remove(test_fname)
