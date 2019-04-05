@@ -8,21 +8,35 @@ def extract_runtime_variables(includes_made):
     print("RUNTIME$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
     runtime_vars = ""
     config_file = ""
-    copy_flag = False
+    variables = ""
+    copy_variable_flag = False
+    copy_runtime_vairable_flag = False
     for line in site_config_with_includes.readlines():
-
-        if copy_flag is True:
-            if line.strip().startswith('-'):
+        if copy_variable_flag is True:
+            current_space_offset = len(line) - len(line.lstrip())
+            if current_space_offset >=space_offset:
+                variables +=line
+            else:
+                copy_variable_flag = False
+        elif copy_runtime_vairable_flag is True:
+            current_space_offset = len(line) - len(line.lstrip())
+            if line.strip().startswith('-') or current_space_offset >= space_offset:
                 runtime_vars += line
             else:
-                copy_flag = False
+                copy_runtime_vairable_flag = False
         else:
-            if "runtime_variables" not in line:
-                config_file += line
-            else:
+            if "runtime_variables" in line:
                 runtime_vars += line
-                copy_flag = True
-    return runtime_vars, config_file
+                space_offset = len(line) - len(line.lstrip())
+                copy_runtime_vairable_flag = True
+            elif "global_variables:" in line:
+                variables += line
+                space_offset = len(line) - len(line.lstrip())
+                copy_variable_flag = True
+            else:
+                config_file += line
+
+    return variables + runtime_vars, config_file
 
 
 def add_runtime_variables(runtime_vars, config_file):
