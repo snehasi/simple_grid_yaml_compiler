@@ -9,6 +9,7 @@ python:
   #- "pypy3"
 # command to install dependencies
 install:
+  - mkdir .temp
   - pip install .
   - pip install -r requirements.txt
 #command to run tests
