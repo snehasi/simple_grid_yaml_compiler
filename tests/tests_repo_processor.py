@@ -27,7 +27,7 @@ class RepoProcessorTest(unittest.TestCase):
 
 		expected_output = "./.temp/simple_grid_yaml_compiler_defaults.yaml"
 
-		self.assertEqual(generate_default_file_name(repo_info), expected_output)
+		self.assertEqual(get_file_location(repo_info, "defaults"), expected_output)
 
 	def test_generate_config_schema_file_name(self):
 		repo_info = {
@@ -38,7 +38,7 @@ class RepoProcessorTest(unittest.TestCase):
 
 		expected_output = "./.temp/simple_grid_yaml_compiler_schema.yaml"
 
-		self.assertEqual(generate_config_schema_file_name(repo_info), expected_output)
+		self.assertEqual(get_file_location(repo_info, "config_schema"), expected_output)
 
 	def test_generate_meta_info_file_name(self):
 		repo_info = {
@@ -49,7 +49,7 @@ class RepoProcessorTest(unittest.TestCase):
 
 		expected_output = "./.temp/simple_grid_yaml_compiler_info.yaml"
 
-		self.assertEqual(generate_meta_info_file_name(repo_info), expected_output)
+		self.assertEqual(get_file_location(repo_info, "meta_info"), expected_output)
 
 	def test_get_default_values(self):
 		repo_url      = "https://github.com/WLCG-Lightweight-Sites/simple_grid_site_defaults"
@@ -71,7 +71,7 @@ class RepoProcessorTest(unittest.TestCase):
 		get_config_schema(repo_url)
 
 		repo_info = analyse_repo_url(repo_url)
-		fname     = generate_config_schema_file_name(repo_info)
+		fname     = get_file_location(repo_info, "config_schema")
 
 		with open(fname, "r") as file:
 			output = file.read()
@@ -87,7 +87,7 @@ class RepoProcessorTest(unittest.TestCase):
 		get_meta_info(repo_url)
 
 		repo_info = analyse_repo_url(repo_url)
-		fname     = generate_meta_info_file_name(repo_info)
+		fname     = get_file_location(repo_info, "meta_info")
 
 		with open(fname, "r") as file:
 			output = file.read()
