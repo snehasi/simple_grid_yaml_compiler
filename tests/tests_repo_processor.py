@@ -1,4 +1,4 @@
-from compiler.repo_processor import analyse_repo_url, generate_default_file_name, generate_config_schema_file_name, generate_meta_info_file_name, get_default_values, get_config_schema, get_meta_info, augment_meta_info, generate_meta_info_parent_name
+from compiler.repo_processor import analyse_repo_url, generate_default_file_name, generate_config_schema_file_name, generate_meta_info_file_name, get_default_values, get_config_schema, get_meta_info, augment_meta_info
 
 from os import mkdir, remove
 from shutil import rmtree
@@ -117,10 +117,3 @@ class RepoProcessorTest(unittest.TestCase):
 			self.assertEqual(test.read(), expected.read())
 
 		remove(test_fname)
-
-	def test_generate_meta_info_parent_name(self):
-		fname = "./tests/data/meta_info.yaml"
-
-		expected_output = "meta_info_test"
-
-		self.assertEqual(generate_meta_info_parent_name(fname), expected_output)
