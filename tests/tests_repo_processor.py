@@ -55,7 +55,7 @@ class RepoProcessorTest(unittest.TestCase):
 		repo_url      = "https://github.com/WLCG-Lightweight-Sites/simple_grid_site_defaults"
 		defaults_file = "site_level_configuration_defaults.yaml"
 
-		fname  = get_default_values(repo_url, defaults_file)
+		fname  = get_repo_file(repo_url, defaults_file, "defaults")
 
 		with open(fname, "r") as file:
 			output = file.read()
@@ -68,7 +68,7 @@ class RepoProcessorTest(unittest.TestCase):
 	def test_get_config_schema(self):
 		repo_url = "https://github.com/WLCG-Lightweight-Sites/wlcg_lightweight_site_ce_cream"
 
-		get_config_schema(repo_url)
+		get_repo_file(repo_url, "config-schema.yaml", "config_schema")
 
 		repo_info = analyse_repo_url(repo_url)
 		fname     = get_file_location(repo_info, "config_schema")
@@ -84,7 +84,7 @@ class RepoProcessorTest(unittest.TestCase):
 	def test_get_meta_info(self):
 		repo_url = "https://github.com/WLCG-Lightweight-Sites/wlcg_lightweight_site_ce_cream"
 
-		get_meta_info(repo_url)
+		get_repo_file(repo_url, "meta-info.yaml", "meta_info", augment_meta_info)
 
 		repo_info = analyse_repo_url(repo_url)
 		fname     = get_file_location(repo_info, "meta_info")
