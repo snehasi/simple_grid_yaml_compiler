@@ -2,18 +2,6 @@ import re
 import urllib2
 from urlparse import urlparse, urljoin
 
-
-def generate_default_file_name(repo_info):
-    return './.temp/' + repo_info['repo_name'] + '_defaults.yaml'
-
-
-def generate_config_schema_file_name(repo_info):
-    return './.temp/' + repo_info['repo_name'] + '_schema.yaml'
-
-
-def generate_meta_info_file_name(repo_info):
-    return './.temp/' + repo_info['repo_name'] + '_info.yaml'
-
 def get_file_location(repo_info, file_type):
     base = "./.temp/" + repo_info["repo_name"]
 
@@ -86,13 +74,3 @@ def get_repo_file(repo_url, file_name, file_type, post_func=None):
 
     except Exception as ex:
         print(ex.message)
-
-
-def get_meta_info(repo_url):
-    return get_repo_file(repo_url, "meta-info.yaml", "meta_info", augment_meta_info)
-
-def get_default_values(repo_url, default_file_name):
-    return get_repo_file(repo_url, default_file_name, "defaults")
-
-def get_config_schema(repo_url):
-    return get_repo_file(repo_url, "config-schema.yaml", "config_schema")
