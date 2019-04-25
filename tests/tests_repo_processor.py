@@ -1,4 +1,4 @@
-from compiler.repo_processor import analyse_repo_url, generate_default_file_name, generate_config_schema_file_name, generate_meta_info_file_name, get_default_values, get_config_schema, get_meta_info, augment_meta_info, generate_meta_info_parent_name
+from compiler.repo_processor import analyse_repo_url, get_file_location, get_default_values, get_config_schema, get_meta_info, augment_meta_info, generate_meta_info_parent_name, get_repo_file
 
 from os import mkdir, remove
 from shutil import rmtree
