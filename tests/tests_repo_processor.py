@@ -68,8 +68,6 @@ class RepoProcessorTest(unittest.TestCase):
 	def test_get_config_schema(self):
 		repo_url = "https://github.com/WLCG-Lightweight-Sites/wlcg_lightweight_site_ce_cream"
 
-		get_config_schema(repo_url)
-
 		repo_info = analyse_repo_url(repo_url)
 		fname     = generate_config_schema_file_name(repo_info)
 
@@ -83,8 +81,6 @@ class RepoProcessorTest(unittest.TestCase):
 
 	def test_get_meta_info(self):
 		repo_url = "https://github.com/WLCG-Lightweight-Sites/wlcg_lightweight_site_ce_cream"
-
-		get_meta_info(repo_url)
 
 		repo_info = analyse_repo_url(repo_url)
 		fname     = generate_meta_info_file_name(repo_info)

@@ -1,5 +1,5 @@
 init:
 	pip install -r requirements.txt
 test:
-	mkdir -p .temp
+	mkdir .temp
 	python -m unittest discover
