@@ -14,13 +14,13 @@ def extract_runtime_variables(includes_made):
     for line in site_config_with_includes.readlines():
         if copy_variable_flag is True:
             current_space_offset = len(line) - len(line.lstrip())
-            if current_space_offset >=space_offset:
+            if line.strip().startswith('-') and current_space_offset >space_offset: # and not line == '\n':
                 variables +=line
             else:
                 copy_variable_flag = False
         elif copy_runtime_vairable_flag is True:
             current_space_offset = len(line) - len(line.lstrip())
-            if line.strip().startswith('-') or current_space_offset >= space_offset:
+            if line.strip().startswith('-') and current_space_offset > space_offset:
                 runtime_vars += line
             else:
                 copy_runtime_vairable_flag = False
