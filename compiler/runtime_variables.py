@@ -12,29 +12,36 @@ def extract_runtime_variables(includes_made):
     copy_variable_flag = False
     copy_runtime_vairable_flag = False
     for line in site_config_with_includes.readlines():
+        if "runtime_variables" in line:
+            runtime_vars += line
+            space_offset = len(line) - len(line.lstrip())
+            copy_runtime_vairable_flag = True
+            copy_variable_flag = False
+            continue
+        elif "global_variables:" in line:
+            variables += line
+            space_offset = len(line) - len(line.lstrip())
+            copy_variable_flag = True
+            copy_runtime_vairable_flag = False
+            continue
+
         if copy_variable_flag is True:
             current_space_offset = len(line) - len(line.lstrip())
             if line.strip().startswith('-') and current_space_offset >space_offset: # and not line == '\n':
                 variables +=line
             else:
                 copy_variable_flag = False
+                continue
         elif copy_runtime_vairable_flag is True:
             current_space_offset = len(line) - len(line.lstrip())
             if line.strip().startswith('-') and current_space_offset > space_offset:
                 runtime_vars += line
             else:
                 copy_runtime_vairable_flag = False
+                continue
         else:
-            if "runtime_variables" in line:
-                runtime_vars += line
-                space_offset = len(line) - len(line.lstrip())
-                copy_runtime_vairable_flag = True
-            elif "global_variables:" in line:
-                variables += line
-                space_offset = len(line) - len(line.lstrip())
-                copy_variable_flag = True
-            else:
-                config_file += line
+            config_file += line
+
 
     return variables + runtime_vars, config_file
 
