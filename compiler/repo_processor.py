@@ -1,6 +1,7 @@
 import re
 import urllib2
 from urlparse import urlparse, urljoin
+import constants
 
 def get_file_location(repo_info, file_type):
     base = "./.temp/" + repo_info["repo_name"]
@@ -74,3 +75,7 @@ def get_repo_file(repo_url, file_name, file_type, post_func=None):
 
     except Exception as ex:
         print(ex.message)
+
+def get_base_files(repo_url):
+    for file, file_type in constants.BASE_FILES:
+        get_repo_file(repo_url, file, file_type)
