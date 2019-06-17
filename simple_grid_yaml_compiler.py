@@ -2,6 +2,7 @@ from compiler import lexemes, semantics, yaml_augmentation, repo_processor, runt
 import argparse
 from ruamel.yaml import YAML
 from shutil import copyfile
+import constants
 
 
 # fetch repos, add include statement for the downloaded default_values.yaml
@@ -10,14 +11,15 @@ from shutil import copyfile
 # OUTPUT: include statements for default files and meta-info files of repositories + raw site level-config file
 def phase_1(site_level_configuration_file):
     # fetch repo and get default_values.yaml
-    main_default_values_file = repo_processor.get_file_location("https://github.com/WLCG-Lightweight-Sites/simple_grid_site_defaults", "site_level_configuration_defaults.yaml", "defaults")
+    repo_processor.get_base_files(constants.BASE_REPO_URL)
+    main_default_values_file = repo_processor.get_repo_file("https://github.com/WLCG-Lightweight-Sites/simple_grid_site_defaults", "site_level_configuration_defaults.yaml", "defaults")
     repo_urls = lexemes.get_repo_list(site_level_configuration_file)
     print(repo_urls)
     file_names_repository_default = [main_default_values_file]
     file_names_repository_meta = []
     for url in repo_urls:
-        file_names_repository_default.append(repo_processor.get_file_location(url, 'default-data.yaml', "defaults"))
-        file_names_repository_meta.append(repo_processor.get_repo_file(repo_url, "meta-info.yaml", "meta_info", augment_meta_info))
+        file_names_repository_default.append(repo_processor.get_repo_file(url, 'default-data.yaml', "defaults"))
+        file_names_repository_meta.append(repo_processor.get_repo_file(url, "meta-info.yaml", "meta_info", repo_processor.augment_meta_info))
     all_includes = file_names_repository_meta + file_names_repository_default
     includes_yaml_file = yaml_augmentation.add_include_statements(all_includes, site_level_configuration_file)
     return includes_yaml_file, repo_urls
@@ -55,7 +57,7 @@ def phase_5(phase_4_output, runtime_vars, yaml):
                     if component_section == 'config':
                         repo_url = lightweight_component['repository_url']
                         repo_processor.get_repo_file(repo_url, "config-schema.yaml", "config_schema")
-                        repo_processor.get_repo_file(repo_url, "meta-info.yaml", "meta_info", augment_meta_info)
+                        repo_processor.get_repo_file(repo_url, "meta-info.yaml", "meta_info", repo_processor.augment_meta_info)
                         repo_info = repo_processor.analyse_repo_url(repo_url)
                         config_schema_file_name = repo_processor.get_file_location(repo_info, "config_schema")
                         config_schema_file = open(config_schema_file_name, 'r')
