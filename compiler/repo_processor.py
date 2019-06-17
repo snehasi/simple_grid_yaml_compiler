@@ -69,7 +69,7 @@ def get_repo_file(repo_url, file_name, file_type, post_func=None):
             file.write(response.read())
 
         if post_func is not None:
-            return post_func(file_loc)
+            return post_func(file_loc).name
 
         return file_loc
 
