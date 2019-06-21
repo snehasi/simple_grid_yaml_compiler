@@ -1,5 +1,5 @@
 ### url of schema
-schema: https://raw.githubusercontent.com/snehasi/simple_grid_site_repo/master/simple_base_schema.yaml
+schema:  https://raw.githubusercontent.com/WLCG-Lightweight-Sites/simple_grid_site_repo/master/simple_base_schema.yaml
 
 ### Variable declaration:
 global_variables:
