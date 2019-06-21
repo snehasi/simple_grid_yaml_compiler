@@ -1,5 +1,8 @@
+### url of schema
+schema: https://raw.githubusercontent.com/snehasi/simple_grid_site_repo/master/simple_base_schema.yaml
+
 ### Variable declaration:
-vars:
+global_variables:
   - &lightweight_component01_ip_address 192.168.0.4
   - &lightweight_component02_ip_address 192.168.0.5
 
@@ -169,5 +172,3 @@ voms_config:
 #    secondary_group: *default_group_alice_name
 #  - *default_pool_account_dteam
 #  - *default_pool_account_ops
-
-
