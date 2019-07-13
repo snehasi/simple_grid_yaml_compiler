@@ -103,11 +103,11 @@ def get_final_config(config, expected_params, defaults, meta_info, expandable_ty
 
         if param_type in expandable_types:
             config[param] = get_final_config(
-                    config = config[param], 
-                    expected_params = expandable_types[param_type], 
-                    defaults = defaults, 
-                    meta_info = meta_info, 
-                    expandable_types = expandable_types, 
+                    config = config[param],
+                    expected_params = expandable_types[param_type],
+                    defaults = defaults,
+                    meta_info = meta_info,
+                    expandable_types = expandable_types,
                     indent = indent + 1)
 
             continue
@@ -124,11 +124,11 @@ def get_final_config(config, expected_params, defaults, meta_info, expandable_ty
                         print "     " * (indent + 1) + "-----------"
 
                     final_value = get_final_config(
-                        config = value, 
-                        expected_params = expandable_types[base_type], 
-                        defaults = defaults, 
-                        meta_info = meta_info, 
-                        expandable_types = expandable_types, 
+                        config = value,
+                        expected_params = expandable_types[base_type],
+                        defaults = defaults,
+                        meta_info = meta_info,
+                        expandable_types = expandable_types,
                         indent = indent + 1)
 
                     final_values.append(final_value)
@@ -153,7 +153,6 @@ def get_final_config(config, expected_params, defaults, meta_info, expandable_ty
 
         if is_specified:
             print "     " * (indent + 1) + "- user_defined_value: {}".format(config[param])
-            pass
 
         if is_specified:
             final_value = config[param]
@@ -168,7 +167,7 @@ def get_final_config(config, expected_params, defaults, meta_info, expandable_ty
             print "     " * (indent + 1) + "- final_value: {}".format(final_value)
             config[param] = final_value
 
-    return config 
+    return config
 
 def process_complete_schema(config, config_schema_file, defaults_file, meta_info_file):
     yaml = YAML()
