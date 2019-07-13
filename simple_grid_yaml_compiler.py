@@ -4,6 +4,8 @@ from ruamel.yaml import YAML
 from shutil import copyfile
 import constants
 
+from sys import exit
+
 
 # fetch repos, add include statement for the downloaded default_values.yaml
 # INPUT: raw site-level-config file filled by site admin
@@ -46,6 +48,18 @@ def phase_5(phase_4_output, runtime_vars, yaml):
     phase_4_output_file = open(phase_4_output.name, 'r')
     phase_5_output_file = open("./.temp/phase_5_output.yaml", 'w')
     data = yaml.load(phase_4_output_file)
+
+    base_repo_info = repo_processor.analyse_repo_url(constants.BASE_REPO_URL)
+
+    base_repo_file = lambda x: repo_processor.get_file_location(base_repo_info, x)
+
+    data = processor_config_schemas.process_complete_schema(
+            config = data,
+            config_schema_file = base_repo_file("config_schema"),
+            defaults_file = base_repo_file("defaults"),
+            meta_info_file = base_repo_file("meta_info")
+            )
+
     phase_5_output = {}
     for data_section in data:
         if data_section == 'lightweight_components':
