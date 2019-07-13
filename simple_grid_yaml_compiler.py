@@ -4,8 +4,6 @@ from ruamel.yaml import YAML
 from shutil import copyfile
 import constants
 
-from sys import exit
-
 
 # fetch repos, add include statement for the downloaded default_values.yaml
 # INPUT: raw site-level-config file filled by site admin
