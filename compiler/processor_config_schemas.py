@@ -1,6 +1,8 @@
 from ruamel.yaml import YAML
 from compiler.repo_processor import generate_meta_info_parent_name
 
+import re
+
 def find_component_data(data, meta_info):
     components = []
     for component in data['lightweight_components']:
@@ -93,4 +95,105 @@ def process_config_schema(component, config_schema_file, default_data_runtime_fi
     print final_config_for_component
     return final_config_for_component
 
+def get_final_config(config, expected_params, defaults, meta_info, expandable_types, indent=0):
+    for index, param in enumerate(expected_params, 1):
+        print "     " * indent + "Param {}: {}".format(index, param)
 
+        param_type = expected_params[param]['type']
+
+        if param_type in expandable_types:
+            config[param] = get_final_config(
+                    config = config[param],
+                    expected_params = expandable_types[param_type],
+                    defaults = defaults,
+                    meta_info = meta_info,
+                    expandable_types = expandable_types,
+                    indent = indent + 1)
+
+            continue
+
+        else:
+            match = re.match("list\((.*)\)", param_type)
+
+            if match and match.group(1) in expandable_types:
+                final_values = []
+                base_type    = match.group(1)
+
+                for index, value in enumerate(config[param]):
+                    if index:
+                        print "     " * (indent + 1) + "-----------"
+
+                    final_value = get_final_config(
+                        config = value,
+                        expected_params = expandable_types[base_type],
+                        defaults = defaults,
+                        meta_info = meta_info,
+                        expandable_types = expandable_types,
+                        indent = indent + 1)
+
+                    final_values.append(final_value)
+
+                config[param] = final_values
+                continue
+
+        is_required  = expected_params[param]["required"]
+        use_default  = expected_params[param]["use_default"]
+        is_specified = True if param in config else False
+
+        default_value = None
+        final_value   = None
+
+        print "     " * (indent + 1) + "- required: {}".format(is_required)
+        print "     " * (indent + 1) + "- use_default: {}".format(use_default)
+        print "     " * (indent + 1) + "- specified: {}".format(is_specified)
+
+        if use_default:
+            default_value = lookup_defaults(defaults, meta_info, param)
+            print "     " * (indent + 1) + "- default_value: {}".format(default_value)
+
+        if is_specified:
+            print "     " * (indent + 1) + "- user_defined_value: {}".format(config[param])
+
+        if is_specified:
+            final_value = config[param]
+        elif use_default:
+            final_value = default_value
+
+        if final_value is None and is_required:
+            message = "A value is required is required for parameter ({}) but is not specified in the config schema".format(param)
+            raise Exception(message)
+
+        if final_value is not None:
+            print "     " * (indent + 1) + "- final_value: {}".format(final_value)
+            config[param] = final_value
+
+    return config
+
+def process_complete_schema(config, config_schema_file, defaults_file, meta_info_file):
+    yaml = YAML()
+
+    config_schema_file = open(config_schema_file, "r")
+    defaults_file      = open(defaults_file, "r")
+    meta_info_file     = open(meta_info_file, "r")
+
+    # Config schema has expected schema and all the expandable types
+    config_schema = yaml.load_all(config_schema_file)
+    defaults      = yaml.load(defaults_file)
+    meta_info     = yaml.load(meta_info_file)
+
+    expected_params  = None
+    expandable_types = {}
+
+    for yaml_doc in config_schema:
+        for key in yaml_doc:
+            if key == "expected":
+                expected_params = yaml_doc[key]
+
+            else:
+                expandable_types[key] = yaml_doc[key]
+
+    if expected_params is None:
+        message = "Config schema needs to have an expected params section"
+        raise Exception(message)
+
+    return get_final_config(config, expected_params, defaults, meta_info, expandable_types)
