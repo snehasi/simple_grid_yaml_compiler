@@ -58,7 +58,7 @@ def yamale_converter(config_schema_file, yamale_file, lc_schema_files):
 
 			if key == "lightweight_component":
 				lc_schema_filenames = [lc_schema.split("/")[-1].replace(".yaml", "") for lc_schema in lc_schema_files]
-			
+
 				lc_schemas = ["include('{}')".format(lc_schema.replace(".yaml", "")) for lc_schema in lc_schema_filenames]
 
 				any_schemas = "any({})".format(", ".join(lc_schemas))
