@@ -25,7 +25,7 @@ def translate(schema, expandable_types):
 
 		return schema_type
 
-	for key, value in schema.items(): 
+	for key, value in schema.items():
 		schema[key] = translate(value, expandable_types)
 
 	return schema
@@ -39,13 +39,13 @@ def yamale_converter(config_schema_file, yamale_file, lc_schema_files):
 	schema = None
 	expandable_types = {}
 
-	for yaml_doc in config_schema: 
+	for yaml_doc in config_schema:
 		for key, value in yaml_doc.items():
 			if key == "expected":
 				schema = value
 
 			else:
-				expandable_types[key] = value	
+				expandable_types[key] = value
 
 	with open(yamale_file, "w") as yamale:
 		schema = translate(schema, expandable_types)
@@ -58,7 +58,7 @@ def yamale_converter(config_schema_file, yamale_file, lc_schema_files):
 
 			if key == "lightweight_component":
 				lc_schema_filenames = [lc_schema.split("/")[-1].replace(".yaml", "") for lc_schema in lc_schema_files]
-				
+			
 				lc_schemas = ["include('{}')".format(lc_schema.replace(".yaml", "")) for lc_schema in lc_schema_filenames]
 
 				any_schemas = "any({})".format(", ".join(lc_schemas))
